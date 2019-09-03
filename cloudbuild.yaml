@@ -1,0 +1,16 @@
+steps:
+#install
+-   name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+
+#test
+-   name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'test:unit']
+
+#build
+-   name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+
+#deploy
+-   name: 'gcr.io/reactnetcore-251307/firebase'
+    args: ['deploy']
