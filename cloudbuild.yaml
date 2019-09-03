@@ -5,7 +5,6 @@ steps:
 
 #test
 -   name: 'gcr.io/cloud-builders/npm'
-    json_location: '/ClientApp/'
     args: ['run', 'test:unit']
     
 #build
