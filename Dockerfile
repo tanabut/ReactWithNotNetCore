@@ -4,15 +4,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-COPY ./ClientApp/package.json /app/package.json
-
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
-RUN apt-get update
 RUN apt-get install -y nodejs
-RUN apt-get update -yq && apt-get upgrade -yq && apt-get install -yq curl git nano
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && apt-get install -yq nodejs build-essential
-RUN npm install -g npm
-RUN npm install -g @angular/cli
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
 WORKDIR /src
