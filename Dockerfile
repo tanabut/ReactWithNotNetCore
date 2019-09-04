@@ -1,40 +1,12 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-stretch-slim AS base
 
-FROM node:8-alpine
-RUN mkdir /app
-WORKDIR /app
-COPY ClientApp/package.json /app
-RUN apk add --no-cache ffmpeg opus pixman cairo pango giflib ca-certificates \
-    && apk add --no-cache --virtual .build-deps python g++ make gcc .build-deps curl git pixman-dev cairo-dev pangomm-dev libjpeg-turbo-dev giflib-dev \
-    && npm install \
-    && apk del .build-deps
-COPY . /app
-CMD ["npm", "start"]
-
-#Angular build
-FROM node as nodebuilder
-
-# set working directory
-RUN mkdir /usr/src/app
-WORKDIR /usr/src/app
-
-# add `/usr/src/app/node_modules/.bin` to $PATH
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-
-
-# install and cache app dependencies
-COPY ClientApp/package.json /usr/src/app/package.json
-RUN npm install
-RUN npm install -g @angular/cli@1.7.0 --unsafe
-
-# add app
-
-COPY ClientApp/. /usr/src/app
-#COPY ClientApp/node_modules/. /usr/src/app
-
-RUN npm run build
-
-#End Angular build
+# Setup NodeJs
+RUN apt-get update && \
+    apt-get install -y wget && \
+    apt-get install -y gnupg2 && \
+    wget -qO- https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get install -y build-essential nodejs
+# End setup
 
 WORKDIR /app
 EXPOSE 80
