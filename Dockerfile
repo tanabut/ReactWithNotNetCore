@@ -4,7 +4,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-WORKDIR /bin/sh
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt-get install -y nodejs
 RUN npm install
@@ -17,6 +16,7 @@ COPY . .
 WORKDIR "/src/."
 RUN dotnet build "ReactWithNotNetCore.csproj" -c Release -o /app
 
+FROM mhart/alpine-node:7
 FROM build AS publish
 RUN dotnet publish "ReactWithNotNetCore.csproj" -c Release -o /app
 
