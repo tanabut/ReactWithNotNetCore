@@ -1,24 +1,19 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-stretch-slim AS base
+FROM microsoft/dotnet:2.1.301-sdk AS builder
+WORKDIR /source
 
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-RUN curl -sL https://deb.nodesource.com/setup_16.x |  bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt-get install -y nodejs
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
-WORKDIR /src
-COPY ["ReactWithNotNetCore.csproj", ""]
-RUN dotnet restore "./ReactWithNotNetCore.csproj"
-COPY . .
-WORKDIR "/src/."
-RUN dotnet build "ReactWithNotNetCore.csproj" -c Release -o /app
+COPY *.csproj .
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "ReactWithNotNetCore.csproj" -c Release -o /app
+COPY ./ ./
 
-FROM base AS final
+RUN dotnet publish "./ReactWithNotNetCore.csproj" --output "./dist" --configuration Release --no-restore
+
+FROM microsoft/dotnet:2.1.1-aspnetcore-runtime
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=builder /source/dist .
+EXPOSE 80
+EXPOSE 443
 ENTRYPOINT ["dotnet", "ReactWithNotNetCore.dll"]
