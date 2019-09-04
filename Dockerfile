@@ -15,6 +15,8 @@ COPY . .
 WORKDIR "/src/."
 RUN dotnet build "ReactWithNotNetCore.csproj" -c Release -o /app
 
+COPY –from=nodebuilder /usr/src/app/dist/ClientApp/. /app/ClientApp/dist/
+
 FROM build AS publish
 RUN dotnet publish "ReactWithNotNetCore.csproj" -c Release -o /app
 
