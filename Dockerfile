@@ -1,3 +1,5 @@
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-stretch-slim AS base
+
 FROM node:8-alpine
 RUN mkdir /app
 WORKDIR /app
@@ -28,12 +30,12 @@ RUN npm install -g @angular/cli@1.7.0 --unsafe
 # add app
 
 COPY ClientApp/. /usr/src/app
+COPY ClientApp/node_modules/. /usr/src/app
 
 RUN npm run build
 
 #End Angular build
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.1-stretch-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
