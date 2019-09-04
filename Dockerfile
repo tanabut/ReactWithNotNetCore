@@ -7,7 +7,9 @@ EXPOSE 443
 COPY ./ClientApp/package.json /app/package.json
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
+RUN apt-get update
 RUN apt-get install -y nodejs
+RUN apt-get install npm
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
 WORKDIR /src
